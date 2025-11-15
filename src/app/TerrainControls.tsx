@@ -12,7 +12,7 @@ import {
   selectWaterLevel,
   useTerrainStore,
 } from '@stores'
-import { PlanetSceneController } from '@render'
+import type { PlanetSceneController } from '@render'
 
 type TerrainControlsProps = {
   sceneController: PlanetSceneController | null

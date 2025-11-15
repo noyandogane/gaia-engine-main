@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { PlanetSceneController } from '@render'
+import type { PlanetSceneController } from '@render'
 import {
   selectCameraSettings,
   selectDamping,

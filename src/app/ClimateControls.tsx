@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react'
 
-import { PlanetSceneController } from '@render'
+import type { PlanetSceneController } from '@render'
 import {
   selectAxialTilt,
   selectAlbedo,

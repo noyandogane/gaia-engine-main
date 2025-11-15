@@ -28,11 +28,17 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@app": ["./src/app"],
       "@app/*": ["./src/app/*"],
+      "@ui": ["./src/ui"],
       "@ui/*": ["./src/ui/*"],
+      "@sim": ["./src/sim"],
       "@sim/*": ["./src/sim/*"],
+      "@render": ["./src/render"],
       "@render/*": ["./src/render/*"],
+      "@assets": ["./src/assets"],
       "@assets/*": ["./src/assets/*"],
+      "@stores": ["./src/stores"],
       "@stores/*": ["./src/stores/*"]
     }
   },

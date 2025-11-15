@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import './app.css'
 
-import { createPlanetScene, PlanetSceneController } from '@render'
+import { createPlanetScene } from '@render'
+import type { PlanetSceneController } from '@render'
 import {
   createTickScheduler,
   DEFAULT_SIMULATION_SPEEDS,
