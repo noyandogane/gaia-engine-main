@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 
 import type { PlanetSceneController } from '@render'
 import {
-  selectCameraSettings,
   selectDamping,
   selectInvertHorizontalAxis,
   selectInvertVerticalAxis,
@@ -11,16 +10,6 @@ import {
   selectZoomSensitivity,
   useCameraStore,
 } from '@stores'
-import type { CameraSettings } from '@stores'
-
-const cameraSettingKeys: Array<keyof CameraSettings> = [
-  'rotateSensitivity',
-  'zoomSensitivity',
-  'panSensitivity',
-  'dampingFactor',
-  'invertHorizontalAxis',
-  'invertVerticalAxis',
-]
 
 type CameraControlsProps = {
   sceneController: PlanetSceneController | null
@@ -40,19 +29,21 @@ const CameraControls = ({ sceneController }: CameraControlsProps) => {
   const setInvertHorizontalAxis = useCameraStore((state) => state.setInvertHorizontalAxis)
   const setInvertVerticalAxis = useCameraStore((state) => state.setInvertVerticalAxis)
   const resetCameraSettings = useCameraStore((state) => state.reset)
-  const cameraSettings = useCameraStore(selectCameraSettings)
 
-  const previousSettingsRef = useRef(cameraSettings)
   const previousControllerRef = useRef<PlanetSceneController | null>(null)
 
   useEffect(() => {
     const controllerChanged = previousControllerRef.current !== sceneController
-    const previousSettings = previousSettingsRef.current
-    const settingsChanged = cameraSettingKeys.some(
-      (key) => cameraSettings[key] !== previousSettings[key],
-    )
 
-    if (sceneController && (controllerChanged || settingsChanged)) {
+    if (sceneController && controllerChanged) {
+      const cameraSettings = {
+        rotateSensitivity,
+        zoomSensitivity,
+        panSensitivity,
+        dampingFactor,
+        invertHorizontalAxis,
+        invertVerticalAxis,
+      }
       sceneController.updateCameraSettings(cameraSettings)
       previousControllerRef.current = sceneController
     }
@@ -60,9 +51,7 @@ const CameraControls = ({ sceneController }: CameraControlsProps) => {
     if (!sceneController) {
       previousControllerRef.current = null
     }
-
-    previousSettingsRef.current = cameraSettings
-  }, [cameraSettings, sceneController])
+  }, [sceneController, rotateSensitivity, zoomSensitivity, panSensitivity, dampingFactor, invertHorizontalAxis, invertVerticalAxis])
 
   return (
     <section className="hud__camera-controls" aria-label="Camera control settings" data-testid="camera-controls">

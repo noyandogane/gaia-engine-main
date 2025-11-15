@@ -18,10 +18,13 @@ This application serves as a planet simulation engine where users can:
 ## Recent Changes
 
 - **2024-11-15**: Configured for Replit environment
-  - Updated Vite configuration to run on port 5000 with proper host settings
-  - Fixed HMR WebSocket configuration for Replit proxy
-  - Fixed TypeScript import issues with `verbatimModuleSyntax`
-  - Added proper path aliases for module resolution
+  - Updated Vite configuration to run on port 5000 with proper host settings (0.0.0.0)
+  - Fixed HMR WebSocket configuration for Replit proxy (WSS with proper domain)
+  - Fixed TypeScript import issues with `verbatimModuleSyntax` (separated type/value imports)
+  - Added proper path aliases for module resolution (both with and without wildcard)
+  - Fixed Three.js OrbitControls import path (examples/jsm → addons)
+  - Disabled axis inversion feature (incompatible with current Three.js OrbitControls API)
+  - Fixed infinite render loop in CameraControls component (removed object selector dependency)
   - Dependencies installed and workflow configured
 
 ## Project Architecture

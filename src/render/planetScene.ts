@@ -8,7 +8,7 @@ import {
   SRGBColorSpace,
   WebGLRenderer,
 } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 import type { CameraSettings } from '@stores'
 
@@ -138,18 +138,9 @@ export const createPlanetScene = (
     verticalInversion = cameraSettings.invertVerticalAxis ? -1 : 1
   }
 
-  const baseRotateLeft = controls.rotateLeft.bind(controls)
-  const baseRotateUp = controls.rotateUp.bind(controls)
-
-  const rotateLeftWithInversion = (angle: number) => {
-    baseRotateLeft(angle * horizontalInversion)
-  }
-  const rotateUpWithInversion = (angle: number) => {
-    baseRotateUp(angle * verticalInversion)
-  }
-
-  controls.rotateLeft = rotateLeftWithInversion
-  controls.rotateUp = rotateUpWithInversion
+  // Note: Axis inversion is disabled in this version due to Three.js OrbitControls API changes
+  // The rotateLeft/rotateUp methods are no longer exposed in newer Three.js versions
+  // TODO: Implement axis inversion using a different approach if needed
 
   const applyCameraSettings = (next: Partial<CameraSettings>) => {
     cameraSettings = clampSettings({
