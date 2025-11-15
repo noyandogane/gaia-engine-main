@@ -1,0 +1,106 @@
+stages:
+  - validate
+  - test
+  - build
+
+variables:
+  NODE_VERSION: "20"
+  CACHE_KEY: "${CI_COMMIT_REF_SLUG}-node-${NODE_VERSION}"
+
+# Cache node_modules across jobs
+cache:
+  key: ${CACHE_KEY}
+  paths:
+    - node_modules/
+
+# Base template for Node.js jobs
+.node_base:
+  image: node:${NODE_VERSION}-alpine
+  before_script:
+    - npm ci --cache .npm --prefer-offline --no-audit --no-fund
+
+# Install dependencies job
+install:
+  extends: .node_base
+  stage: validate
+  script:
+    - echo "Dependencies installed successfully"
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 hour
+
+# Lint job
+lint:
+  extends: .node_base
+  stage: validate
+  dependencies:
+    - install
+  script:
+    - npm run lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Type check job
+type-check:
+  extends: .node_base
+  stage: validate
+  dependencies:
+    - install
+  script:
+    - npm run typecheck
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Unit tests job
+unit-tests:
+  extends: .node_base
+  stage: test
+  dependencies:
+    - install
+  script:
+    - npm run test
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    when: always
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# E2E tests job (Playwright stub)
+e2e-tests:
+  extends: .node_base
+  stage: test
+  dependencies:
+    - install
+  script:
+    - npm run test:e2e
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Build job
+build:
+  extends: .node_base
+  stage: build
+  dependencies:
+    - install
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
